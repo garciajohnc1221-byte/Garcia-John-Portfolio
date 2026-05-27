@@ -20,7 +20,7 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 .container{max-width:980px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
 
 /* NAV */
-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);margin-bottom:0}
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border)}
 .nav-logo{font-family:var(--mono);font-size:13px;color:var(--accent)}
 .nav-links{display:flex;gap:24px}
 .nav-links a{font-size:13px;font-family:var(--mono);color:var(--muted);text-decoration:none;transition:color .2s}
@@ -28,7 +28,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
 
 /* HERO */
 .hero{padding:64px 0 56px;display:grid;grid-template-columns:1fr 280px;align-items:center;gap:48px}
-@media(max-width:700px){.hero{grid-template-columns:1fr;}.hero-photo-wrap{order:-1;margin:0 auto}}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.hero-photo-wrap{order:-1;margin:0 auto}}
 .hero-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;opacity:0;animation:fadeUp .6s ease forwards .1s}
 .hero-name{font-family:var(--serif);font-size:clamp(40px,5.5vw,68px);line-height:1.05;letter-spacing:-.02em;color:#fff;opacity:0;animation:fadeUp .6s ease forwards .2s}
 .hero-name em{font-style:italic;color:var(--accent)}
@@ -59,33 +59,64 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
 .stat-value{font-family:var(--serif);font-size:36px;color:#fff;line-height:1}
 .stat-label{font-size:12px;color:var(--muted);margin-top:6px;font-family:var(--mono);letter-spacing:.04em}
 
-/* SKILLS */
-.skill-groups{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:600px){.skill-groups{grid-template-columns:1fr}}
-.skill-group{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 24px;opacity:0;animation:fadeUp .5s ease forwards}
-.skill-group-title{font-size:12px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.skill-group-title::after{content:'';flex:1;height:1px;background:var(--border)}
-.skill-item{margin-bottom:14px}
-.skill-item:last-child{margin-bottom:0}
-.skill-row{display:flex;justify-content:space-between;margin-bottom:6px}
-.skill-name{font-size:13px;color:var(--text)}
-.skill-pct{font-size:11px;font-family:var(--mono);color:var(--muted)}
-.skill-bar-track{height:3px;background:var(--border2);border-radius:2px;overflow:hidden}
-.skill-bar-fill{height:100%;border-radius:2px;width:0%;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+/* ── SKILLS SHOWCASE ── */
+.skills-showcase{margin-bottom:0}
+.skills-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;opacity:0;animation:fadeUp .5s ease forwards .1s}
+.skill-tab{padding:7px 18px;border-radius:30px;font-size:12px;font-family:var(--mono);border:1px solid var(--border2);color:var(--muted);background:transparent;cursor:pointer;transition:all .25s;letter-spacing:.04em}
+.skill-tab:hover{color:var(--text);border-color:rgba(255,255,255,.3)}
+.skill-tab.active{color:#0d0f14;border-color:transparent}
+
+.skills-panels{position:relative;min-height:320px}
+.skill-panel{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .5s ease,transform .5s ease;transform:translateY(12px)}
+.skill-panel.active{opacity:1;pointer-events:auto;transform:translateY(0);position:relative}
+
+/* Radar / Hexagon card layout */
+.skill-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.skill-hex-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 16px;text-align:center;transition:all .3s cubic-bezier(.34,1.56,.64,1);cursor:default;position:relative;overflow:hidden}
+.skill-hex-card::before{content:'';position:absolute;inset:0;border-radius:16px;opacity:0;transition:opacity .3s}
+.skill-hex-card:hover{transform:translateY(-4px) scale(1.03);border-color:var(--card-color,var(--accent))}
+.skill-hex-card:hover::before{opacity:1}
+.shc-icon{font-size:28px;margin-bottom:10px;display:block;transition:transform .3s}
+.skill-hex-card:hover .shc-icon{transform:scale(1.2) rotate(-5deg)}
+.shc-name{font-size:12px;font-family:var(--mono);color:var(--text);margin-bottom:10px;display:block}
+.shc-bar-wrap{height:3px;background:var(--border2);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.shc-bar{height:100%;border-radius:2px;width:0%;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.shc-pct{font-size:10px;font-family:var(--mono);color:var(--muted)}
+
+/* Animated ring chart for top skills */
+.ring-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:16px}
+.ring-item{display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fadeUp .5s ease forwards}
+.ring-svg{transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--border2);stroke-width:6}
+.ring-fill{fill:none;stroke-width:6;stroke-linecap:round;stroke-dasharray:220;stroke-dashoffset:220;transition:stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1)}
+.ring-label{font-size:11px;font-family:var(--mono);color:var(--muted);text-align:center;line-height:1.4}
+.ring-val{font-size:16px;font-weight:600;color:#fff;font-family:var(--serif)}
+.ring-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.ring-wrap{position:relative;display:inline-block}
+
+/* Flip cards for tools */
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px}
+.flip-card{height:110px;perspective:600px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.34,1.56,.64,1);transform-style:preserve-3d}
+.flip-card:hover .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border)}
+.flip-front{background:var(--surface)}
+.flip-back{background:var(--surface2);transform:rotateY(180deg);border-color:var(--border2)}
+.flip-icon{font-size:26px}
+.flip-name{font-size:11px;font-family:var(--mono);color:var(--muted)}
+.flip-back-text{font-size:11px;font-family:var(--mono);color:var(--accent);text-align:center;padding:0 8px;line-height:1.5}
 
 /* TOOLS CAROUSEL */
-.tools-section{margin-bottom:40px}
 .tools-scroll-wrap{overflow:hidden;position:relative}
 .tools-scroll-wrap::before,.tools-scroll-wrap::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
 .tools-scroll-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
 .tools-scroll-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
-.tools-track{display:flex;gap:16px;animation:scrollTools 28s linear infinite;width:max-content}
+.tools-track{display:flex;gap:16px;animation:scrollTools 32s linear infinite;width:max-content}
 .tools-track:hover{animation-play-state:paused}
 .tool-chip{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:40px;padding:8px 16px 8px 10px;white-space:nowrap;transition:border-color .2s,transform .2s;cursor:default;flex-shrink:0}
 .tool-chip:hover{border-color:var(--border2);transform:translateY(-2px)}
-.tool-chip img{width:22px;height:22px;object-fit:contain;border-radius:4px}
+.tool-icon-fb{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .tool-chip span{font-size:12px;font-family:var(--mono);color:var(--muted)}
-.tool-icon-fallback{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 
 /* EXPERIENCE */
 .exp-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:12px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;transition:border-color .2s;opacity:0;animation:fadeUp .5s ease forwards}
@@ -121,7 +152,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
 @keyframes scrollTools{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 .stat-card:nth-child(1){animation-delay:.1s}.stat-card:nth-child(2){animation-delay:.2s}.stat-card:nth-child(3){animation-delay:.3s}.stat-card:nth-child(4){animation-delay:.4s}
-.skill-group:nth-child(1){animation-delay:.15s}.skill-group:nth-child(2){animation-delay:.25s}.skill-group:nth-child(3){animation-delay:.35s}.skill-group:nth-child(4){animation-delay:.45s}
 .exp-card:nth-child(1){animation-delay:.1s}.exp-card:nth-child(2){animation-delay:.25s}
 .readiness-card:nth-child(1){animation-delay:.1s}.readiness-card:nth-child(2){animation-delay:.2s}.readiness-card:nth-child(3){animation-delay:.3s}.readiness-card:nth-child(4){animation-delay:.4s}
 </style>
@@ -129,13 +159,12 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
 <body>
 <div class="container">
 
-<!-- NAV -->
 <nav>
   <span class="nav-logo">// jcag.dev</span>
   <div class="nav-links">
     <a href="#skills">Skills</a>
-    <a href="#experience">Experience</a>
     <a href="#tools">Tools</a>
+    <a href="#experience">Experience</a>
     <a href="mailto:garciajohnc1221.email@gmail.com">Contact</a>
   </div>
 </nav>
@@ -145,10 +174,10 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
   <div>
     <p class="hero-eyebrow">// virtual assistant · rizal, philippines</p>
     <h1 class="hero-name">John Christian<br><em>A. Garcia</em></h1>
-    <p class="hero-tagline">Remote-ready VA & admin professional specialising in customer support, AI-powered productivity, and digital organisation.</p>
+    <p class="hero-tagline">Remote-ready VA &amp; admin professional specialising in customer support, AI-powered productivity, and digital organisation.</p>
     <div class="hero-links">
       <a href="mailto:garciajohnc1221.email@gmail.com" class="btn btn-primary">✉ Email me</a>
-      <a href="https://www.linkedin.com/in/garcia-john-christian-a-05bb48409" target="_blank" class="btn btn-ghost">LinkedIn →</a>
+      <a href="https://linkedin.com/in/john-garcia-5a673b40b/" target="_blank" class="btn btn-ghost">LinkedIn →</a>
     </div>
     <div class="status-badge"><span class="status-dot"></span>Open to remote opportunities</div>
   </div>
@@ -170,35 +199,41 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
   <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-value">50</div><div class="stat-label">Mbps fiber connection</div></div>
 </div>
 
-<!-- SKILLS -->
+<!-- SKILLS SHOWCASE -->
 <div class="divider" id="skills"></div>
 <p class="section-label">// skill proficiency</p>
-<div class="skill-groups">
-  <div class="skill-group">
-    <div class="skill-group-title">AI &amp; Productivity</div>
-    <div class="skill-item"><div class="skill-row"><span class="skill-name">Google Workspace</span><span class="skill-pct">95%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="95" style="background:#4fc3a1"></div></div></div>
-    <div class="skill-item"><div class="skill-row"><span class="skill-name">Microsoft 365</span><span class="skill-pct">90%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="90" style="background:#4fc3a1"></div></div></div>
-    <div class="skill-item"><div class="skill-row"><span class="skill-name">ChatGPT / AI Tools</span><span class="skill-pct">88%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="88" style="background:#7c6ef5"></div></div></div>
-    <div class="skill-item"><div class="skill-row"><span class="skill-name">Canva / CapCut</span><span class="skill-pct">82%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="82" style="background:#f0997b"></div></div></div>
+<div class="skills-showcase">
+  <div class="skills-tabs">
+    <button class="skill-tab active" data-tab="rings" style="background:#4fc3a1">Proficiency Rings</button>
+    <button class="skill-tab" data-tab="cards">Skill Cards</button>
+    <button class="skill-tab" data-tab="flip">Tool Mastery</button>
   </div>
-  <div class="skill-group">
-    <div class="skill-group-title">Communication &amp; CRM</div>
-    <div class="skill-item"><div class="skill-row"><span class="skill-name">Email Support</span><span class="skill-pct">95%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="95" style="background:#4fc3a1"></div></div></div>
-    <div class="skill-item"><div class="skill-row"><span class="skill-name">Slack / Discord / Zoom</span><span class="skill-pct">92%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="92" style="background:#4fc3a1"></div></div></div>
-    <div class="skill-item"><div class="skill-row"><span class="skill-name">Notion</span><span class="skill-pct">85%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="85" style="background:#f5a623"></div></div></div>
-    <div class="skill-item"><div class="skill-row"><span class="skill-name">HubSpot / Intercom</span><span class="skill-pct">65%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="65" style="background:#e05c7a"></div></div></div>
+
+  <div class="skills-panels">
+
+    <!-- PANEL 1: Animated rings -->
+    <div class="skill-panel active" id="panel-rings">
+      <div class="ring-row" id="ringRow"></div>
+    </div>
+
+    <!-- PANEL 2: Hex cards with bars -->
+    <div class="skill-panel" id="panel-cards">
+      <div class="skill-cards-grid" id="cardGrid"></div>
+    </div>
+
+    <!-- PANEL 3: Flip cards -->
+    <div class="skill-panel" id="panel-flip">
+      <div class="flip-grid" id="flipGrid"></div>
+    </div>
+
   </div>
 </div>
 
 <!-- TOOLS CAROUSEL -->
 <div class="divider" id="tools"></div>
 <p class="section-label">// tools &amp; platforms</p>
-<div class="tools-section">
-  <div class="tools-scroll-wrap">
-    <div class="tools-track" id="toolsTrack">
-      <!-- filled by JS -->
-    </div>
-  </div>
+<div class="tools-scroll-wrap">
+  <div class="tools-track" id="toolsTrack"></div>
 </div>
 
 <!-- EXPERIENCE -->
@@ -211,7 +246,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
     <div class="exp-org">National Teachers' College Student Organization</div>
     <div class="exp-date">Aug 2025 – Jun 2026</div>
     <ul class="exp-bullets">
-      <li>Managed reports and coordinated team tasks using Google Workspace & Microsoft Office in fast-paced environments.</li>
+      <li>Managed reports and coordinated team tasks using Google Workspace &amp; Microsoft Office in fast-paced environments.</li>
       <li>Utilised ChatGPT, Canva, Zoom, Slack, and Discord to support communication and project efficiency.</li>
       <li>Maintained accuracy and attention to detail while meeting deadlines across fast-paced team activities.</li>
     </ul>
@@ -226,7 +261,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
     <ul class="exp-bullets">
       <li>Led and coordinated group projects by assigning tasks, monitoring progress, and ensuring timely delivery.</li>
       <li>Created polished reports and presentations using Microsoft Office and Google Workspace.</li>
-      <li>Conducted research using online tools and AI platforms to improve accuracy and support informed project results.</li>
+      <li>Conducted research using AI platforms to improve accuracy and support informed project results.</li>
     </ul>
   </div>
 </div>
@@ -256,75 +291,196 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0
   </div>
 </div>
 
-<!-- FOOTER -->
 <div class="divider"></div>
 <footer class="footer">
   <span class="footer-copy">© 2026 John Christian A. Garcia</span>
   <div class="footer-links">
     <a href="mailto:garciajohnc1221.email@gmail.com">Email</a>
-    <a href="https://www.linkedin.com/in/garcia-john-christian-a-05bb48409" target="_blank">LinkedIn</a>
+    <a href="https://linkedin.com/in/john-garcia-5a673b40b/" target="_blank">LinkedIn</a>
     <a href="tel:+630956169124">+63 095 616 9124</a>
   </div>
 </footer>
-
 </div>
 
 <script>
-// Animate tool count
+// ── DATA ──
+var ringSkills=[
+  {name:"Google Workspace",pct:95,color:"#4fc3a1"},
+  {name:"Microsoft 365",pct:90,color:"#4fc3a1"},
+  {name:"Email Support",pct:95,color:"#4fc3a1"},
+  {name:"ChatGPT / AI",pct:88,color:"#7c6ef5"},
+  {name:"Slack / Zoom",pct:92,color:"#4fc3a1"},
+  {name:"Notion",pct:85,color:"#f5a623"},
+  {name:"Canva / CapCut",pct:82,color:"#f0997b"},
+  {name:"HubSpot",pct:65,color:"#e05c7a"},
+];
+
+var cardSkills=[
+  {name:"Google Docs",icon:"📄",pct:96,color:"#4285f4"},
+  {name:"Google Sheets",icon:"📊",pct:90,color:"#0f9d58"},
+  {name:"Gmail",icon:"📧",pct:97,color:"#ea4335"},
+  {name:"MS Word",icon:"📝",pct:91,color:"#2b579a"},
+  {name:"MS Excel",icon:"📈",pct:88,color:"#217346"},
+  {name:"ChatGPT",icon:"🤖",pct:88,color:"#10a37f"},
+  {name:"Canva",icon:"🎨",pct:83,color:"#00c4cc"},
+  {name:"Notion",icon:"📓",pct:85,color:"#9b59b6"},
+  {name:"Slack",icon:"💬",pct:92,color:"#4a154b"},
+  {name:"Zoom",icon:"🎥",pct:93,color:"#2d8cff"},
+  {name:"HubSpot",icon:"🔶",pct:65,color:"#ff7a59"},
+  {name:"QuickBooks",icon:"💳",pct:60,color:"#2ca01c"},
+];
+
+var flipTools=[
+  {icon:"🤖",name:"ChatGPT",back:"AI writing,\nresearch & drafts"},
+  {icon:"✍️",name:"Grammarly",back:"Proofreading &\ngrammar checks"},
+  {icon:"🎨",name:"Canva",back:"Graphics, posts\n& presentations"},
+  {icon:"📊",name:"G Sheets",back:"Data tracking\n& reports"},
+  {icon:"📧",name:"Gmail",back:"Email support\n& management"},
+  {icon:"💬",name:"Slack",back:"Team comms\n& async work"},
+  {icon:"🎥",name:"Zoom",back:"Client calls\n& meetings"},
+  {icon:"📓",name:"Notion",back:"Task & project\nmanagement"},
+  {icon:"🔶",name:"HubSpot",back:"CRM & customer\ntracking"},
+  {icon:"📈",name:"MS Excel",back:"Spreadsheets\n& analysis"},
+  {icon:"🎬",name:"CapCut",back:"Video editing\n& reels"},
+  {icon:"📱",name:"Meta Biz",back:"Social media\nmanagement"},
+];
+
+var carouselTools=[
+  {name:"ChatGPT",icon:"🤖",color:"#10a37f"},
+  {name:"Gemini",icon:"✨",color:"#4285f4"},
+  {name:"Grammarly",icon:"✍️",color:"#15c39a"},
+  {name:"Canva AI",icon:"🎨",color:"#7c3aed"},
+  {name:"Google Docs",icon:"📄",color:"#4285f4"},
+  {name:"Google Sheets",icon:"📊",color:"#0f9d58"},
+  {name:"Google Slides",icon:"📑",color:"#f4b400"},
+  {name:"Google Drive",icon:"💾",color:"#1da462"},
+  {name:"Gmail",icon:"📧",color:"#ea4335"},
+  {name:"Google Meet",icon:"📹",color:"#00832d"},
+  {name:"Microsoft Word",icon:"📝",color:"#2b579a"},
+  {name:"Microsoft Excel",icon:"📈",color:"#217346"},
+  {name:"PowerPoint",icon:"🖥",color:"#d24726"},
+  {name:"Microsoft 365",icon:"☁️",color:"#0078d4"},
+  {name:"Zoom",icon:"🎥",color:"#2d8cff"},
+  {name:"Slack",icon:"💬",color:"#4a154b"},
+  {name:"Discord",icon:"🎮",color:"#5865f2"},
+  {name:"Notion",icon:"📓",color:"#6c5dd3"},
+  {name:"HubSpot",icon:"🔶",color:"#ff7a59"},
+  {name:"Intercom",icon:"💭",color:"#1f8ded"},
+  {name:"Dialpad",icon:"📞",color:"#6c5dd3"},
+  {name:"QuickBooks",icon:"💳",color:"#2ca01c"},
+  {name:"Stripe",icon:"💳",color:"#635bff"},
+  {name:"Canva",icon:"🖌",color:"#00c4cc"},
+  {name:"CapCut",icon:"🎬",color:"#000000"},
+  {name:"Meta Business",icon:"📱",color:"#1877f2"},
+];
+
+// ── BUILD RINGS ──
+var ringRow=document.getElementById("ringRow");
+ringSkills.forEach(function(s,i){
+  var circ=Math.round(220*(1-s.pct/100));
+  ringRow.innerHTML+=
+    '<div class="ring-item" style="animation-delay:'+(i*0.08)+'s">'+
+    '<div class="ring-wrap">'+
+    '<svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80">'+
+    '<circle class="ring-track" cx="40" cy="40" r="35"/>'+
+    '<circle class="ring-fill" cx="40" cy="40" r="35" stroke="'+s.color+'" data-offset="'+circ+'"/>'+
+    '</svg>'+
+    '<div class="ring-center"><span class="ring-val">'+s.pct+'</span></div>'+
+    '</div>'+
+    '<div class="ring-label">'+s.name.replace(" ",'<br>')+'</div>'+
+    '</div>';
+});
+
+// ── BUILD CARDS ──
+var cardGrid=document.getElementById("cardGrid");
+cardSkills.forEach(function(s){
+  cardGrid.innerHTML+=
+    '<div class="skill-hex-card" style="--card-color:'+s.color+'">'+
+    '<span class="shc-icon">'+s.icon+'</span>'+
+    '<span class="shc-name">'+s.name+'</span>'+
+    '<div class="shc-bar-wrap"><div class="shc-bar" data-pct="'+s.pct+'" style="background:'+s.color+'"></div></div>'+
+    '<span class="shc-pct">'+s.pct+'%</span>'+
+    '</div>';
+});
+
+// ── BUILD FLIP ──
+var flipGrid=document.getElementById("flipGrid");
+flipTools.forEach(function(t){
+  flipGrid.innerHTML+=
+    '<div class="flip-card">'+
+    '<div class="flip-inner">'+
+    '<div class="flip-front"><span class="flip-icon">'+t.icon+'</span><span class="flip-name">'+t.name+'</span></div>'+
+    '<div class="flip-back"><span class="flip-back-text">'+t.back.replace("\\n","<br>")+'</span></div>'+
+    '</div></div>';
+});
+
+// ── BUILD CAROUSEL ──
+var track=document.getElementById("toolsTrack");
+var allT=carouselTools.concat(carouselTools);
+var chtml="";
+allT.forEach(function(t){
+  chtml+='<div class="tool-chip"><div class="tool-icon-fb" style="background:'+t.color+'22;color:'+t.color+'">'+t.icon+'</div><span>'+t.name+'</span></div>';
+});
+track.innerHTML=chtml;
+
+// ── TABS ──
+var tabs=document.querySelectorAll(".skill-tab");
+var tabColors={"rings":"#4fc3a1","cards":"#7c6ef5","flip":"#f5a623"};
+tabs.forEach(function(tab){
+  tab.addEventListener("click",function(){
+    tabs.forEach(function(t){t.classList.remove("active");t.style.background="transparent";t.style.color="var(--muted)"});
+    tab.classList.add("active");
+    tab.style.background=tabColors[tab.dataset.tab]||"#4fc3a1";
+    tab.style.color="#0d0f14";
+    document.querySelectorAll(".skill-panel").forEach(function(p){p.classList.remove("active")});
+    var panel=document.getElementById("panel-"+tab.dataset.tab);
+    panel.classList.add("active");
+    if(tab.dataset.tab==="rings")animateRings();
+    if(tab.dataset.tab==="cards")animateCards();
+  });
+});
+
+// ── ANIMATE RINGS ──
+function animateRings(){
+  document.querySelectorAll(".ring-fill").forEach(function(r){
+    r.style.strokeDashoffset=220;
+    setTimeout(function(){r.style.strokeDashoffset=r.dataset.offset;},50);
+  });
+}
+
+// ── ANIMATE CARDS (bars) ──
+function animateCards(){
+  document.querySelectorAll(".shc-bar").forEach(function(b){
+    b.style.width=0;
+    setTimeout(function(){b.style.width=b.dataset.pct+"%";},80);
+  });
+}
+
+// ── INTERSECTION: fire rings & cards when visible ──
+var ranRings=false,ranCards=false;
+var sectionObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      if(!ranRings){ranRings=true;setTimeout(animateRings,200);}
+    }
+  });
+},{threshold:0.1});
+var showcase=document.querySelector(".skills-showcase");
+if(showcase)sectionObs.observe(showcase);
+
+// also watch cards panel
+var cardObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting&&!ranCards){ranCards=true;animateCards();}});
+},{threshold:0.1});
+var cg=document.getElementById("cardGrid");
+if(cg)cardObs.observe(cg);
+
+// ── TOOL COUNT ──
 (function(){
-  var el=document.getElementById('toolCount'),target=26,cur=0;
+  var el=document.getElementById("toolCount"),target=26,cur=0;
   var step=function(){cur=Math.min(cur+1,target);el.textContent=cur;if(cur<target)setTimeout(step,40)};
   setTimeout(step,700);
 })();
-
-// Skill bar intersection observer
-var fills=document.querySelectorAll('.skill-bar-fill');
-var obs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){if(e.isIntersecting){var b=e.target;b.style.width=b.dataset.pct+'%';obs.unobserve(b)}});
-},{threshold:0.1});
-fills.forEach(function(f){obs.observe(f)});
-
-// Tools carousel data with emoji icons
-var tools=[
-  {name:'ChatGPT',icon:'🤖',color:'#10a37f'},
-  {name:'Gemini',icon:'✨',color:'#4285f4'},
-  {name:'Grammarly',icon:'✍️',color:'#15c39a'},
-  {name:'Canva AI',icon:'🎨',color:'#7c3aed'},
-  {name:'Google Docs',icon:'📄',color:'#4285f4'},
-  {name:'Google Sheets',icon:'📊',color:'#0f9d58'},
-  {name:'Google Slides',icon:'📑',color:'#f4b400'},
-  {name:'Google Drive',icon:'💾',color:'#1da462'},
-  {name:'Gmail',icon:'📧',color:'#ea4335'},
-  {name:'Google Meet',icon:'📹',color:'#00832d'},
-  {name:'Microsoft Word',icon:'📝',color:'#2b579a'},
-  {name:'Microsoft Excel',icon:'📈',color:'#217346'},
-  {name:'PowerPoint',icon:'🖥',color:'#d24726'},
-  {name:'Microsoft 365',icon:'☁️',color:'#0078d4'},
-  {name:'Zoom',icon:'🎥',color:'#2d8cff'},
-  {name:'Slack',icon:'💬',color:'#4a154b'},
-  {name:'Discord',icon:'🎮',color:'#5865f2'},
-  {name:'Notion',icon:'📓',color:'#000000'},
-  {name:'HubSpot',icon:'🔶',color:'#ff7a59'},
-  {name:'Intercom',icon:'💭',color:'#1f8ded'},
-  {name:'Dialpad',icon:'📞',color:'#6c5dd3'},
-  {name:'QuickBooks',icon:'💳',color:'#2ca01c'},
-  {name:'Stripe',icon:'💳',color:'#635bff'},
-  {name:'Canva',icon:'🖌',color:'#00c4cc'},
-  {name:'CapCut',icon:'🎬',color:'#000000'},
-  {name:'Meta Business',icon:'📱',color:'#1877f2'},
-];
-
-// Build double-set for seamless loop
-var track=document.getElementById('toolsTrack');
-var allTools=tools.concat(tools);
-var html='';
-allTools.forEach(function(t){
-  html+='<div class="tool-chip">'
-    +'<div class="tool-icon-fallback" style="background:'+t.color+'22;color:'+t.color+'">'+t.icon+'</div>'
-    +'<span>'+t.name+'</span>'
-    +'</div>';
-});
-track.innerHTML=html;
 </script>
 </body>
 </html>
